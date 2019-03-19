@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-
 // refs: https://thepracticaldeveloper.com/2017/07/31/guide-spring-boot-controller-tests/
 @RunWith(MockitoJUnitRunner.class)
 public class EchoControllerStandaloneModeTest {
@@ -31,18 +30,26 @@ public class EchoControllerStandaloneModeTest {
 
     @Test
     public void shouldEcho() throws Exception {
-        MockHttpServletResponse response = mvc.perform(
-                get("/echo/tumit").accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
-
+        // arrange
+        String url = "/echo/tumit";
+        // act
+        MockHttpServletResponse response = mvc.perform(get(url).accept(MediaType.APPLICATION_JSON))
+                                              .andReturn()
+                                              .getResponse();
+        // assert
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.getContentAsString()).isEqualTo("Hello, tumit");
     }
 
     @Test
     public void shouldErrorNotFound() throws Exception {
-        MockHttpServletResponse response = mvc.perform(
-                get("/echo").accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
-
+        // arrange
+        String url = "/should-not-found";
+        // act
+        MockHttpServletResponse response = mvc.perform(get(url).accept(MediaType.APPLICATION_JSON))
+                                              .andReturn()
+                                              .getResponse();
+        // asserts
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
         assertThat(response.getContentAsString()).isEqualTo("");
     }
